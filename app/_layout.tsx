@@ -1,29 +1,71 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useFonts, InknutAntiqua_700Bold } from '@expo-google-fonts/inknut-antiqua';
+import { Inter_400Regular, Inter_700Bold } from '@expo-google-fonts/inter';
+import { StatusBar } from 'expo-status-bar';
+import SplashScreenComponent from '@/components/SplashScreen';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+    const [fontsLoaded, fontError] = useFonts({
+        InknutAntiqua_700Bold,
+        Inter_400Regular,
+        Inter_700Bold,
+    });
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
+    const [appIsReady, setAppIsReady] = useState(false);
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+    useEffect(() => {
+        if (fontsLoaded || fontError) {
+            const timer = setTimeout(() => {
+                setAppIsReady(true);
+            }, 5000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [fontsLoaded, fontError]);
+
+    if (!fontsLoaded && !fontError) {
+        return null;
+    }
+
+    if (!appIsReady) {
+        return <SplashScreenComponent />;
+    }
+
+    return (
+        <>
+            <Stack>
+                <Stack.Screen
+                    name="index"
+                    options={{
+                        headerTitle: 'MovieMind',
+                        headerStyle: { backgroundColor: '#0A183E' },
+                        headerTitleStyle: {
+                            fontFamily: 'InknutAntiqua_700Bold',
+                            color: '#FFFFFF',
+                            fontSize: 24,
+                        },
+                        headerShadowVisible: false,
+                        headerTitleAlign: 'left',
+                    }}
+                />
+                <Stack.Screen 
+                    name="detail/[id]" 
+                    options={{ 
+                        title: 'MovieMind',
+                        headerStyle: { backgroundColor: '#0A183E' },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: {
+                            fontFamily: 'InknutAntiqua_700Bold',
+                            color: '#FFFFFF',
+                            fontSize: 24,
+                        }
+                    }} 
+                />
+                <Stack.Screen name="+not-found" />
+            </Stack>
+            <StatusBar style="light" />
+        </>
+    );
 }
