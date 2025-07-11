@@ -2,6 +2,7 @@ import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+// Impor ikon untuk rating
 const ratingIcons = {
     'Internet Movie Database': require('@/assets/images/imdb.png'),
     'Rotten Tomatoes': require('@/assets/images/rotten-tomatoes.png'),
@@ -113,7 +114,10 @@ export default function MovieDetailPage() {
                 style={styles.poster}
             />
 
-            <ScrollView style={styles.scrollableContainer}>
+            <ScrollView 
+                style={styles.scrollableContainer} 
+                contentContainerStyle={{ paddingBottom: 30 }}
+            >
                 <View style={styles.mainInfoContainer}>
                     <Text style={styles.title}>{movie.Title}</Text>
                     
@@ -152,7 +156,9 @@ export default function MovieDetailPage() {
                         {movie.Ratings.map((rating, index) => (
                             <View key={index} style={styles.ratingBox}>
                                 <Image source={ratingIcons[rating.Source as keyof typeof ratingIcons]} style={styles.ratingIcon} />
-                                <Text style={styles.ratingSource}>{rating.Source}</Text>
+                                <Text style={styles.ratingSource}>
+                                    {rating.Source}
+                                </Text>
                                 <Text style={styles.ratingValue}>{rating.Value}</Text>
                                 {rating.Source === 'Internet Movie Database' && movie.imdbVotes && movie.imdbVotes !== 'N/A' && (
                                     <Text style={styles.imdbVotesText}>{movie.imdbVotes}</Text>
@@ -291,7 +297,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#9BA5C0',
         textAlign: 'center',
-        marginBottom: 4,
+        height: 30,
     },
     ratingValue: {
         fontFamily: 'Inter_700Bold',

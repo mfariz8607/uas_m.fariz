@@ -130,7 +130,7 @@ export default function HomeScreen() {
                         data={filteredMovies}
                         renderItem={({ item }) => <MovieCard movie={item} />}
                         keyExtractor={(item: any, index) => item.imdbID + '_' + index}
-                        contentContainerStyle={{ paddingTop: 10, paddingBottom: 20 }}
+                        contentContainerStyle={{ paddingTop: 10, paddingBottom: 40 }}
                         onEndReached={loadMoreMovies}
                         onEndReachedThreshold={0.5}
                         ListFooterComponent={isLoadingMore ? <ActivityIndicator size="small" color="#00A3B8" style={{ marginVertical: 20 }} /> : null}
